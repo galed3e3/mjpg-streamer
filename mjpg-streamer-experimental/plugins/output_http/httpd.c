@@ -1279,7 +1279,8 @@ void *client_thread(void *arg)
     } while(cnt > 2 && !(buffer[0] == '\r' && buffer[1] == '\n'));
 
     /* check for username and password if parameter -c was given */
-    if(lcfd.pc->conf.credentials != NULL) {
+    /* but ignore if request is for snapshot */
+    if(lcfd.pc->conf.credentials != NULL && req.type != A_SNAPSHOT) {
         if(req.credentials == NULL || strcmp(lcfd.pc->conf.credentials, req.credentials) != 0) {
             DBG("access denied\n");
             send_error(lcfd.fd, 401, "username and password do not match to configuration");
